@@ -173,7 +173,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "rhel7:latest"
+                            "name": "openshift/jenkins-slave-maven-centos7:latest"
                         }
                     }
                 },
@@ -435,7 +435,7 @@
         {
             "name": "JENKINS_IMAGE_TAG",
             "description": "Base OpenShift Jenkins Image Tag",
-            "value": ""
+            "value": "openshift/jenkins-2-centos7:latest"
         },
         {
             "name": "GIT_URI",
