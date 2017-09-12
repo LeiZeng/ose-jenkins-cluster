@@ -56,7 +56,7 @@ fi
 
 SWARM_CLIENT="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2.jar"
 echo "Downloading ${SWARM_CLIENT} swarm client jar ..."
-curl -sS ${SWARM_CLIENT}/jnlpJars/remoting.jar -o ${JAR}
+curl -sS ${SWARM_CLIENT} -o ${JAR}
 
 # if -tunnel is not provided try env vars
 if [[ "$@" != *"-tunnel "* ]]; then
