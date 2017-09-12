@@ -43,6 +43,8 @@ set -e
 
 JAR="${JENKINS_HOME}/remoting.jar"
 PARAMS=""
+TUNNEL=""
+URL=""
 
 # if -url is not provided try env vars
 if [[ "$@" != *"-url "* ]]; then
@@ -53,6 +55,7 @@ if [[ "$@" != *"-url "* ]]; then
     JENKINS_URL="http://$JENKINS_SERVICE_HOST:$JENKINS_SERVICE_PORT"
   fi
 fi
+URL=PARAMS
 
 echo "Downloading ${JENKINS_URL}/jnlpJars/remoting.jar ..."
 curl -sS ${JENKINS_URL}/jnlpJars/remoting.jar -o ${JAR}
@@ -61,8 +64,10 @@ curl -sS ${JENKINS_URL}/jnlpJars/remoting.jar -o ${JAR}
 if [[ "$@" != *"-tunnel "* ]]; then
   if [ ! -z "$JENKINS_TUNNEL" ]; then
     PARAMS="$PARAMS -tunnel $JENKINS_TUNNEL"
+    TUNNEL="-tunnel $JENKINS_TUNNEL"
   elif [ ! -z "$JENKINS_SLAVE_SERVICE_HOST" ] && [ ! -z "$JENKINS_SLAVE_SERVICE_PORT" ]; then
     PARAMS="$PARAMS -tunnel $JENKINS_SLAVE_SERVICE_HOST:$JENKINS_SLAVE_SERVICE_PORT"
+    TUNNEL="-tunnel $JENKINS_SLAVE_SERVICE_HOST:$JENKINS_SLAVE_SERVICE_PORT"
   fi
 fi
 
@@ -109,6 +114,7 @@ if [ ! -z "${CONTAINER_CORE_LIMIT}" ]; then
     JAVA_CORE_LIMIT="-XX:ParallelGCThreads=${CONTAINER_CORE_LIMIT} -Djava.util.concurrent.ForkJoinPool.common.parallelism=${CONTAINER_CORE_LIMT} -XX:CICompilerCount=2"
 fi
 
+JAR_FILE=`ls -1 $JAR | tail -n 1`
 echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS "$@"
 cd ${JENKINS_DIR}
-exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS -jar-cache $HOME "$@"
+exec java $JAVA_OPTS -cp $JAR_FILE hudson.remoting.jnlp.Main -headless $URL $TUNNEL -jar-cache $HOME "$@"
