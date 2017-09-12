@@ -173,7 +173,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "rhel7:latest"
+                            "name": "openshift/jenkins-slave-maven-centos7:latest"
                         }
                     }
                 },
@@ -452,12 +452,12 @@
         {
             "name": "JENKINS_IMAGE_TAG",
             "description": "Base OpenShift Jenkins Image Tag",
-            "value": "latest"
+            "value": "openshift/jenkins-2-centos7:latest"
         },
         {
             "name": "GIT_URI",
             "description": "Git Repository",
-            "value": "https://github.com/ram4ibm/ose-jenkins-cluster.git"
+            "value": "https://github.com/LeiZeng/ose-jenkins-cluster.git"
         },
         {
             "name": "GIT_REF",
