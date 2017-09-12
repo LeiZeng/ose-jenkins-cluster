@@ -112,5 +112,6 @@ fi
 echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS "$@"
 cd ${JENKINS_DIR} && exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM  \
                                 $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS \
-                                $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main \
-                                -headless $PARAMS 1a12dfa4-7fc5-47a7-aa17-cc56572a41c7 $OPENSHIFT_BUILD_NAME "$@"
+                                $JAVA_OPTS -jar $JAR \
+                                -headless $PARAMS \
+                                $JENKINS_PASSWORD $OPENSHIFT_BUILD_NAME "$@"
