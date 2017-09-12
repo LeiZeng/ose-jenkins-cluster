@@ -34,10 +34,10 @@
 		    "kind": "ImageStream",
 		    "apiVersion": "v1",
 		    "metadata": {
-		        "name": "rhel7"
+		        "name": "jenkins-slave-centos"
 		    },
 			"spec": {
-				"dockerImageRepository": "registry.access.redhat.com/rhel7/rhel"
+				"dockerImageRepository": "openshift/jenkins-slave-maven-centos7"
 			}
 		},
 		{
@@ -47,7 +47,7 @@
 		        "name": "ose-jenkins"
 		    },
 			"spec": {
-				"dockerImageRepository": "registry.access.redhat.com/openshift3/jenkins-2-rhel7"
+				"dockerImageRepository": "openshift/jenkins-2-centos7"
 			}
 		},
         {
@@ -173,7 +173,7 @@
                     "dockerStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "openshift/jenkins-slave-maven-centos7:latest"
+                            "name": "jenkins-slave-centos:latest"
                         }
                     }
                 },
@@ -435,7 +435,7 @@
         {
             "name": "JENKINS_IMAGE_TAG",
             "description": "Base OpenShift Jenkins Image Tag",
-            "value": "openshift/jenkins-2-centos7:latest"
+            "value": "ose-jenkins:latest"
         },
         {
             "name": "GIT_URI",
