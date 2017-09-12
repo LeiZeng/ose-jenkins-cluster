@@ -54,7 +54,7 @@ if [[ "$@" != *"-url "* ]]; then
   fi
 fi
 
-SWARM_CLIENT="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2-jar-with-dependencies.jar"
+SWARM_CLIENT="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2.jar"
 echo "Downloading ${SWARM_CLIENT} swarm client jar ..."
 curl -sS ${SWARM_CLIENT}/jnlpJars/remoting.jar -o ${JAR}
 
@@ -111,7 +111,7 @@ if [ ! -z "${CONTAINER_CORE_LIMIT}" ]; then
     JAVA_CORE_LIMIT="-XX:ParallelGCThreads=${CONTAINER_CORE_LIMIT} -Djava.util.concurrent.ForkJoinPool.common.parallelism=${CONTAINER_CORE_LIMT} -XX:CICompilerCount=2"
 fi
 
-echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS "$@"
+echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -jar $JAR hudson.remoting.jnlp.Main -headless $PARAMS "$@"
 cd ${JENKINS_DIR} && exec java $JAVA_OPTS -jar $JAR \
                                 -master $JENKINS_URL -tunnel $JENKINS_TUNNEL \
                                 -username "admin" -password $JENKINS_PASSWORD \
