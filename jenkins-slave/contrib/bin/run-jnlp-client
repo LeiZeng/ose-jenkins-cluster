@@ -113,5 +113,5 @@ echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $J
 cd ${JENKINS_DIR} && exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM  \
                                 $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS \
                                 $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless \
-                                -jnlpCredentials "admin:$JENKINS_PASSWORD" \
+                                -credentials "admin:$JENKINS_PASSWORD" \
                                 "" $OPENSHIFT_BUILD_NAME "$@"
