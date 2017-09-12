@@ -1,17 +1,28 @@
 #!/bin/bash
 
+export JENKINS_HOME=/opt/jenkins-slave
 master_username=${JENKINS_USERNAME:-"admin"}
-master_password=${JENKINS_PASSWORD:-"password"}
+master_password=${JENKINS_PASSWORD:-"welcome"}
 slave_executors=${EXECUTORS:-"1"}
 
+JAR="${JENKINS_HOME}/bin/slave.jar"
 
+# if -url is not provided try env vars
+if [[ "$@" != *"-url "* ]]; then
+  if [ ! -z "$JENKINS_URL" ]; then
+    PARAMS="$PARAMS -url $JENKINS_URL"
+  elif [ ! -z "$JENKINS_SERVICE_HOST" ] && [ ! -z "$JENKINS_SERVICE_PORT" ]; then
+    PARAMS="$PARAMS -url http://$JENKINS_SERVICE_HOST:$JENKINS_SERVICE_PORT"
+    JENKINS_URL="http://$JENKINS_SERVICE_HOST:$JENKINS_SERVICE_PORT"
+  fi
+fi
+
+mkdir -p "$JENKINS_HOME/bin"
+echo "Downloading ${JENKINS_URL}/jnlpJars/remoting.jar ..."
+curl -sS ${JENKINS_URL}/jnlpJars/remoting.jar -o ${JAR}
 
 # If JENKINS_SECRET and JENKINS_JNLP_URL are present, run JNLP slave
 if [ ! -z $JENKINS_SECRET ] && [ ! -z $JENKINS_JNLP_URL ]; then
-
-    echo "Running Jenkins JNLP Slave...."
-	JAR=`ls -1 /opt/jenkins-slave/bin/slave.jar | tail -n 1`
-
 	# if -tunnel is not provided try env vars
 	if [[ "$@" != *"-tunnel "* ]]; then
 		if [[ ! -z "$JENKINS_TUNNEL" ]]; then
@@ -28,10 +39,6 @@ if [ ! -z $JENKINS_SECRET ] && [ ! -z $JENKINS_JNLP_URL ]; then
 elif [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
 
   echo "Running Jenkins Swarm Plugin...."
-
-  # jenkins swarm slave
-  JAR=`ls -1 /opt/jenkins-slave/bin/swarm-client-*.jar | tail -n 1`
-
   if [[ "$@" != *"-master "* ]] && [ ! -z "$JENKINS_PORT_8080_TCP_ADDR" ]; then
 	PARAMS="-master http://${JENKINS_SERVICE_HOST}:${JENKINS_SERVICE_PORT}${JENKINS_CONTEXT_PATH} -tunnel ${JENKINS_SLAVE_SERVICE_HOST}:${JENKINS_SLAVE_SERVICE_PORT}${JENKINS_SLAVE_CONTEXT_PATH} -username ${master_username} -password ${master_password} -executors ${slave_executors}"
   fi

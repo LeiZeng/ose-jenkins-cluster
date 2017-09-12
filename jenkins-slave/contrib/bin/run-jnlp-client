@@ -54,15 +54,17 @@ if [[ "$@" != *"-url "* ]]; then
   fi
 fi
 
-echo "Downloading ${JENKINS_URL}/jnlpJars/remoting.jar ..."
-curl -sS ${JENKINS_URL}/jnlpJars/remoting.jar -o ${JAR}
+SWARM_CLIENT="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2-jar-with-dependencies.jar"
+echo "Downloading ${SWARM_CLIENT} swarm client jar ..."
+curl -sS ${SWARM_CLIENT}/jnlpJars/remoting.jar -o ${JAR}
 
 # if -tunnel is not provided try env vars
 if [[ "$@" != *"-tunnel "* ]]; then
   if [ ! -z "$JENKINS_TUNNEL" ]; then
     PARAMS="$PARAMS -tunnel $JENKINS_TUNNEL"
   elif [ ! -z "$JENKINS_SLAVE_SERVICE_HOST" ] && [ ! -z "$JENKINS_SLAVE_SERVICE_PORT" ]; then
-    PARAMS="$PARAMS -tunnel $JENKINS_SLAVE_SERVICE_HOST:$JENKINS_SLAVE_SERVICE_PORT"
+    JENKINS_TUNNEL="$JENKINS_SLAVE_SERVICE_HOST:$JENKINS_SLAVE_SERVICE_PORT"
+    PARAMS="$PARAMS -tunnel $JENKINS_TUNNEL"
   fi
 fi
 
@@ -110,8 +112,7 @@ if [ ! -z "${CONTAINER_CORE_LIMIT}" ]; then
 fi
 
 echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS "$@"
-cd ${JENKINS_DIR} && exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM  \
-                                $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS \
-                                $JAVA_OPTS -jar $JAR \
-                                -auth "admin:$JENKINS_PASSWORD" \
-                                -jnlpUrl "$JENKINS_URL/computer/$OPENSHIFT_BUILD_NAME/slave-agent.jnlp" "$@"
+cd ${JENKINS_DIR} && exec java $JAVA_OPTS -jar $JAR \
+                                -master $JENKINS_URL -tunnel $JENKINS_TUNNEL \
+                                -username "admin" -password $JENKINS_PASSWORD \
+                                -name $OPENSHIFT_BUILD_NAME "$@"
