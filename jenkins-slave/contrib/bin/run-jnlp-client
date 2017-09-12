@@ -114,4 +114,4 @@ cd ${JENKINS_DIR} && exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM  \
                                 $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS \
                                 $JAVA_OPTS -jar $JAR \
                                 -auth "admin:$JENKINS_PASSWORD" \
-                                -jnlpUrl "$JENKINS_URL/computer/$OPENSHIFT_BUILD_NAME/slave-angent.jnlp" "$@"
+                                -jnlpUrl "$JENKINS_URL/computer/$OPENSHIFT_BUILD_NAME/slave-agent.jnlp" "$@"
