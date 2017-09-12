@@ -110,7 +110,5 @@ if [ ! -z "${CONTAINER_CORE_LIMIT}" ]; then
 fi
 
 echo Running java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS "$@"
-cd ${JENKINS_DIR} && exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM  \
-                                $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS \
-                                $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main \
-                                -headless $PARAMS "$@"
+cd ${JENKINS_DIR}
+exec java $JAVA_GC_OPTS $JAVA_INITIAL_HEAP_PARAM $JAVA_MAX_HEAP_PARAM $JAVA_CORE_LIMIT $JAVA_DIAGNOSTICS $JAVA_OPTS -cp $JAR hudson.remoting.jnlp.Main -headless $PARAMS -jar-cache $HOME "$@"
