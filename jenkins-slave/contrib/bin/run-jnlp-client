@@ -54,7 +54,7 @@ if [[ "$@" != *"-url "* ]]; then
   fi
 fi
 
-SWARM_CLIENT="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2.jar"
+SWARM_CLIENT="https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.2/swarm-client-2.2-jar-with-dependencies.jar"
 echo "Downloading ${SWARM_CLIENT} swarm client jar ..."
 curl -sS ${SWARM_CLIENT} -o ${JAR}
 
